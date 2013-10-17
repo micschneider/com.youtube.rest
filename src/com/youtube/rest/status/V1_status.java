@@ -1,7 +1,11 @@
 package com.youtube.rest.status;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.*;
+
+import java.sql.*;
+
+import com.youtube.dao.*;
 
 @Path("/v1/status/")
 public class V1_status 
@@ -21,5 +25,40 @@ public class V1_status
 	public String returnVersion()
 	{
 		return "<p>Version: " + api_version + "</p>";
+	}
+	
+	@Path("/database")
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public String returnDatabaseStatus()
+	{
+		PreparedStatement query = null;
+		String returnString = "";
+		Connection conn = null;
+			
+		try
+		{
+			conn = DatabaseHandler.connect();
+			query = conn.prepareStatement("SELECT * FROM books");
+			ResultSet result = query.executeQuery();
+			
+			while(result.next())
+			{
+				returnString += result.getString("author") + ": " + result.getString("name") + "<br>";
+			}
+			
+			DatabaseHandler.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			if(conn != null)
+				DatabaseHandler.close();	
+		}
+		
+		return returnString;
 	}
 }

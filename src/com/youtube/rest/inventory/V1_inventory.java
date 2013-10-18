@@ -20,11 +20,12 @@ public class V1_inventory
 {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String returnAllPcParts()
+	public Response returnAllPcParts()
 	{
 		PreparedStatement query = null;
 		Connection conn = null;
 		String returnString = "";
+		Response response = null;
 		
 		try
 		{
@@ -40,6 +41,7 @@ public class V1_inventory
 			query.close();
 			
 			returnString = jsonArr.toString();
+			response = Response.ok(returnString).build();
 		}
 		catch(Exception e)
 		{
@@ -57,6 +59,6 @@ public class V1_inventory
 			}
 		}	
 		
-		return returnString;
+		return response;
 	}
 }

@@ -47,7 +47,7 @@ public class V1_status
 				returnString += result.getString("author") + ": " + result.getString("name") + "<br>";
 			}
 			
-			DatabaseHandler.close();
+			conn.close();
 		}
 		catch(Exception e)
 		{
@@ -55,8 +55,14 @@ public class V1_status
 		}
 		finally
 		{
-			if(conn != null)
-				DatabaseHandler.close();	
+			try
+			{
+				conn.close();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 		
 		return returnString;

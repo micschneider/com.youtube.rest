@@ -2,21 +2,23 @@ package com.youtube.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DatabaseHandler 
 {
 	private static Connection DatabaseConnection = null;
 	
 	public static Connection connect()
-	{
+	{	
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			DatabaseConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/youtube", "root", "");
+			DatabaseConnection = DriverManager.getConnection("jdbc:mysql://localhost/youtube", "root", "");
 			return DatabaseConnection;
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -25,12 +27,15 @@ public class DatabaseHandler
 	{
 		try
 		{
-			if(DatabaseConnection != null)
+			if(!DatabaseConnection.isClosed())
 			{
 				DatabaseConnection.close();
 				return true;
 			}
-			return false;
+			else
+			{
+				return false;
+			}
 		}
 		catch(Exception e)
 		{
